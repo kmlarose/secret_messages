@@ -1,54 +1,109 @@
+import logging
 import random
 import string
 
 
 class Alberti:
-    _CHAR_REPLACEMENTS = {'_': 'ZZ',
-                          'H': 'FF',
-                          'U': 'VV',
-                          'Y': 'II',
-                          'J': 'XX'}
-    _PLAIN_TEXT_DISK = 'ABCDEFGIKLMNOPQRSTVWXZ1234'
-
-    def __init__(self, key='A', cipher_disk='HDVEQYLRIJTCBPXWOSMZFNAKGU'):
+    def __init__(self, key='A', cipher_disk='hdveqylrijtcbpxwosmzfnakgu'):
         self.key = key.upper()
-        self._CIPHER_DISK = cipher_disk
+        self._CIPHER_DISK = cipher_disk.lower()
+        self._CHAR_REPLACEMENTS = {' ': 'ZZ',
+                                   'H': 'FF',
+                                   'U': 'VV',
+                                   'Y': 'II',
+                                   'J': 'XX'}
+        self._PLAIN_TEXT_DISK = 'ABCDEFGIKLMNOPQRSTVWXZ1234'
 
     def encrypt(self, text):
         # make sure there aren't any numbers in the text
         if any(char.isdigit() for char in text):
             raise ValueError("Please no numbers - write them out or use Roman numerals")
+        coded_message = text.upper()
 
-        # align the cipher disk key with the Plain Text disk letter A
-        cipher = self._CIPHER_DISK
-        cipher = cipher[cipher.index(self.key):] + cipher[:cipher.index(self.key)]
+        # align the cipher disk key with the Plain Text Disk letter A
+        cipher = self.reset_cipher()
 
-        # roll the dice, and insert numbers into
+        # replace any characters in the text which do not appear on the plain text disk
+        for char, replacement in self._CHAR_REPLACEMENTS.items():
+            coded_message = coded_message.replace(char, replacement)
 
-    # generates a random ordered alphabet to be used as a cipher disk
-    def generate_cipher_disk(self):
-        alphabet = list(string.ascii_uppercase)
+        # randomly add numbers to the message to represent cipher disk rotations
+        index = 0
+        coded_message = list(coded_message)
+        while index < len(coded_message):
+            # determine where to add the cipher shift
+            index += random.randint(1, 4)
+
+            # determine how many rotations to shift the cipher
+            cipher_shift = str(random.randint(1, 4))
+
+            # insert the number into the coded message
+            coded_message.insert(index, cipher_shift)
+            index += 1
+
+        # replace the characters of the message with the cipher characters
+        for char in coded_message:
+            # find the character on the Plain Text Disk
+            disk_index = self._PLAIN_TEXT_DISK.index(char)
+            # record the cipher disk character at this location
+            coded_message[coded_message.index(char)] = cipher[disk_index]
+
+            # if the character is a number, then rotate the cipher code
+            if char.isdigit():
+                cipher = self.rotate_cipher(cipher, int(char))
+
+        coded_message = ''.join(coded_message)
+        return coded_message.upper()
+
+    def decrypt(self, text):
+        # align the cipher disk key with the Plain Text Disk letter A
+        cipher = self.reset_cipher()
+
+        # decrypt the characters in the coded message
+        message = list(text.lower())
+        for char in message:
+            # find the character on the Cipher Disk
+            disk_index = cipher.index(char)
+            # record the Plain Text Disk character at this location
+            message[message.index(char)] = self._PLAIN_TEXT_DISK[disk_index]
+
+            # if the character is a number, then rotate the cipher code backwards
+            new_char = message[message.index(self._PLAIN_TEXT_DISK[disk_index])]
+            if new_char.isdigit():
+                shift = int(new_char)
+                cipher = self.rotate_cipher(cipher, shift)
+
+        # remove the numbers from the message
+        remove_list = []
+        for char in message:
+            if char.isdigit():
+                remove_list.append(char)
+        for char in remove_list:
+            message.remove(char)
+
+        # swap out character replacements
+        message = ''.join(message)
+        # import pdb; pdb.set_trace()
+        for char, replacement in self._CHAR_REPLACEMENTS.items():
+            # identify if there are any occurrences of the special characters
+            try:
+                message.index(replacement)
+            except ValueError:
+                continue
+            else:
+                message = message.replace(replacement, char)
+        return message
+
+    def reset_cipher(self):
+        return self.rotate_cipher(self._CIPHER_DISK, self._CIPHER_DISK.index(self.key.lower()))
+
+    @classmethod
+    def rotate_cipher(cls, cipher, shift):
+        return cipher[shift:] + cipher[:shift]
+
+    @classmethod
+    def generate_cipher_disk(cls):
+        """generates a random ordered alphabet to be used as a cipher disk"""
+        alphabet = list(string.ascii_lowercase)
         random.shuffle(alphabet)
         return ''.join(alphabet)
-
-
-
-    # set a password for the Disk
-    # needs an initial key P/b for example
-    # there's an immovable disk A-Z + 1234
-    # there's a movable inner disk which turns, and has a jumbled alphabet
-    # adds rotational commands - roll 2 4-sided dice, determine # of chars & # to encode
-
-    # ability to insert multiple numbers as a code book entry
-
-    # need the same cipher disk...
-    # but you also need the crib aka code book
-    # CB or LC something that says - codebook, then 2 numbers
-    # the code book entry redefines what the numbers mean
-
-    #so, here's what we're gonna do
-    def encrypt(self, message):
-        pass
-
-    def decrypt(self, message):
-        pass
