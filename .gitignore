@@ -8,10 +8,6 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
-# examples from treehouse
-caesar.py
-ciphers.py
-
 # pycharm stuff
 .idea
 
