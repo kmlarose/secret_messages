@@ -5,7 +5,7 @@ import os
 
 
 def clear():
-    os.system('cls' if os.name=='nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def run_console_ui():
@@ -13,6 +13,7 @@ def run_console_ui():
         '1: Caesar Cipher',
         '2: Alberti Cipher',
         '3: Affine Cipher',
+        '4: Atbash Cipher',
         '0: Quit'
     ]
     while True:
@@ -43,6 +44,16 @@ def run_console_ui():
         elif cipher_choice == '3':
             affine = Affine()
             print('Affine test... {} work in progress'.format(affine))
+            text_cipher = Affine()
+            secret_message = text_cipher.encrypt('affinecipher', 25, 25)
+            print(secret_message)
+            original_message = text_cipher.decrypt('ZUURMVXRKSVI', 25, 25)
+            print(original_message)
+            input('press any key to continue...')
+        elif cipher_choice == '4':
+            print('Atbash test')
+            test = Affine()
+            print(test.encrypt('rip', 25, 25))
             input('press any key to continue...')
         elif cipher_choice == '0':
             print('bye!')

@@ -50,11 +50,3 @@ class Affine:
             new_letter = self.alphabet[coded_message[index]]
             coded_message[index] = new_letter
         return ''.join(coded_message)
-
-# lil' test to help me out while I'm developing the class
-if __name__ == '__main__':
-    text_cipher = Affine()
-    secret_message = text_cipher.encrypt('affinecipher', 5, 8)
-    print(secret_message)
-    original_message = text_cipher.decrypt('IHHWVCSWFRCP', 5, 8)
-    print(original_message)
