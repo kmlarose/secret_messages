@@ -30,7 +30,6 @@ class Affine:
         return ''.join(coded_message)
 
     def decrypt(self, text, a, b):
-        """d(x) = mod_inverse(a) * (y - b)"""
         # transform the message into numbers
         coded_message = []
         for char in text.upper():
@@ -41,8 +40,16 @@ class Affine:
             else:
                 coded_message.append(num_val)
 
+        # solve for a^-1
+        # 1 = a * ? % m
+        modular_inverse = 1
+        while True:
+            if a * modular_inverse % len(self.alphabet) == 1:
+                break
+            else:
+                modular_inverse += 1
+
         # run the formula & convert back to a letter
-        modular_inverse = len(self.alphabet) - (a % len(self.alphabet))
         for index in range(0, len(coded_message)):
             coded_message[index] -= b
             coded_message[index] *= modular_inverse
