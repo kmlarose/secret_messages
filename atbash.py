@@ -12,11 +12,3 @@ class Atbash(Affine):
 
     def decrypt(self, text):
         return super().decrypt(text, self.affine_arg, self.affine_arg)
-
-orig = Affine()
-print(orig.encrypt('holy', 25, 25))
-print(orig.decrypt('slob', 25, 25))
-
-test = Atbash()
-print(test.encrypt('abcdefghijklmnopqrstuvwxyz'))
-print(test.decrypt('zyxwvutsrqponmlkjihgfedcba'))
