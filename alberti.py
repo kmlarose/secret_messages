@@ -1,9 +1,11 @@
-import logging
+from ciphers import Cipher
 import random
 import string
 
 
-class Alberti:
+# TODO-kml: do some refactoring
+# TODO-kml: add docstring descriptions
+class Alberti(Cipher):
     def __init__(self, key='A', cipher_disk='hdveqylrijtcbpxwosmzfnakgu'):
         self.key = key.upper()
         self._CIPHER_DISK = cipher_disk.lower()

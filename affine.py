@@ -1,7 +1,10 @@
+from ciphers import Cipher
 import string
 
 
-class Affine:
+# TODO-kml: do some refactoring
+# TODO-kml: add docstring descriptions
+class Affine(Cipher):
     def __init__(self):
         self.alphabet = string.ascii_uppercase
 

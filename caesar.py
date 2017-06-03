@@ -3,6 +3,8 @@ import string
 from ciphers import Cipher
 
 
+# TODO-kml: do some refactoring
+# TODO-kml: add docstring descriptions
 class Caesar(Cipher):
     FORWARD = string.ascii_uppercase * 3
 

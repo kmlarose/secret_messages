@@ -1,6 +1,8 @@
 from affine import Affine
 
 
+# TODO-kml: do some refactoring
+# TODO-kml: add docstring descriptions
 class Atbash(Affine):
     """a special case of the Affine cipher..."""
     def __init__(self):
