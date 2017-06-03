@@ -10,6 +10,12 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
+def print_underlined(text):
+    """Prints the text underlined with ='s"""
+    print(text)
+    print('=' * len(text))
+
+
 def run_console_ui():
     """
     Runs the console user interface
@@ -21,22 +27,20 @@ def run_console_ui():
         '2: Decrypt a Message',
         'Q: Quit']
     cipher_menu = [
-        '1: Caesar Cipher',
+        '1: Affine Cipher',
         '2: Alberti Cipher',
-        '3: Affine Cipher',
-        '4: Atbash Cipher',
+        '3: Atbash Cipher',
+        '4: Caesar Cipher',
+        'H: Help',
         'B: Back to Main Menu',
         'Q: Quit']
-    # TODO-kml: add some kind of help option to explain what the heck is going on here
-    # TODO-kml: get the user inputs required to set up your ciphers
-    # TODO-kml: make sure your ciphers are working properly
 
     quit_ui = False
     while not quit_ui:
         # prompt 1: choose to encrypt or decrypt
         clear()
-        print('Secret Messages!')
-        print('=' * 16)
+        print_underlined('Secret Messages!')
+        print('Choose to encrypt or decrypt a message:')
         [print(option) for option in main_menu]
 
         user_choice = input('> ')
@@ -49,86 +53,108 @@ def run_console_ui():
         else:
             continue
 
+        # TODO-kml: make sure your ciphers are working properly
         # prompt 2: choose which cipher to use
         while True:
             clear()
-            print('Secret Messages!')
-            print('=' * 16)
+            print_underlined('Secret Messages!')
             print('Which cipher would you like to use for {}ion?:'.format(cipher_method))
             [print(option) for option in cipher_menu]
 
-            # TODO-kml: is there a why to make this section more maintainable and DRY?
+            # TODO-kml: is there a way to make this section more maintainable and DRY?
+            # yes, getattr(object, method)(args) can do what you wanna do...
             cipher_choice = input('> ')
             if cipher_choice == '1':
-                # use the Caesar Cypher
-                print('Caesar Cipher')
-                print('=' * 13)
-                if cipher_method == 'encrypt':
-                    message = input('Input a message to encrypt: ')
-                    cipher = Caesar()
-                    secret_message = cipher.encrypt(message)
-                    print('Your secret message is: {}'.format(secret_message))
-                    input('press any key to continue...')
-                if cipher_method == 'decrypt':
-                    secret_message = input('Input a message to decrypt: ')
-                    cipher = Caesar()
-                    message = cipher.decrypt(message)
-                    print('Your decrypted message is: {}'.format(message))
-                    input('press any key to continue...')
+                clear()
+                print_underlined('Affine Cipher')
+                print("Please provide two numbers as the key for the Affine Cipher")
+                # get the key, loop through input until a valid number is provided
+                # TODO-kml: set up an Affine @classmethod to check if the key_a is valid
+                while True:
+                    affine_key_a = input('Enter the first key number: ')
+                    try:
+                        affine_key_a = int(affine_key_a)
+                    except ValueError:
+                        print('please provide an integer...')
+                    else:
+                        break
+                while True:
+                    affine_key_b = input('Enter the second key number: ')
+                    try:
+                        affine_key_b = int(affine_key_b)
+                    except ValueError:
+                        print('please provide an integer...')
+                    else:
+                        break
+
+                cipher = Affine(affine_key_a, affine_key_b)
+                users_message = input('Input a message to {}: '.format(cipher_method))
+                # use getattr() to call whichever method the user chose: encrypt or decrypt
+                translation = getattr(cipher, cipher_method)(users_message)
+                print('Translation: {}'.format(translation))
+                input('press any key to continue...')
+
             elif cipher_choice == '2':
-                # use the Alberti Cypher
-                print('Alberti Cipher')
-                print('=' * 13)
-                if cipher_method == 'encrypt':
-                    message = input('Input a message to encrypt: ')
-                    cipher = Alberti()
-                    secret_message = cipher.encrypt(message)
-                    print('Your secret message is: {}'.format(secret_message))
-                    input('press any key to continue...')
-                if cipher_method == 'decrypt':
-                    secret_message = input('Input a message to decrypt: ')
-                    cipher = Alberti()
-                    message = cipher.decrypt(message)
-                    print('Your decrypted message is: {}'.format(message))
-                    input('press any key to continue...')
+                outer_ring = 'ABCDEFGIKLMNOPQRSTVWXZ1234'
+                inner_ring = 'hdveqylrijtcbpxwosmzfnakgu'
+
+                while True:
+                    clear()
+                    print_underlined('Alberti Cipher')
+                    print('This cipher models an ancient device that aligns two disks:')
+                    print('an outer disk with Plain Text, and an inner disk with Ciphertext')
+                    print('Enter the inner ring character to align with outer ring A:')
+                    print('Outer Ring: {}'.format(outer_ring))
+                    print('Inner Ring: {}'.format(inner_ring))
+
+                    key = input('> ')
+                    key = key.lower()
+                    if key in inner_ring:
+                        inner_ring = Alberti.rotate_cipher(inner_ring, inner_ring.index(key))
+                        clear()
+                        print_underlined('Alberti Cipher')
+                        print('This cipher models an ancient device that aligns two disks:')
+                        print('an outer disk with Plain Text, and an inner disk with Ciphertext')
+                        print()
+                        print('Outer Ring: {}'.format(outer_ring))
+                        print('Inner Ring: {}'.format(inner_ring))
+                        if input('Is this right [Y/n]?').lower() != 'n':
+                            break
+
+                cipher = Alberti(cipher_disk=inner_ring)
+                users_message = input('Input a message to {}: '.format(cipher_method))
+                # use getattr() to call whichever method the user chose: encrypt or decrypt
+                translation = getattr(cipher, cipher_method)(users_message)
+                print('Translation: {}'.format(translation))
+                input('press any key to continue...')
+
             elif cipher_choice == '3':
-                # use the Affine Cypher
-                print('Affine Cipher')
-                print('=' * 13)
-                if cipher_method == 'encrypt':
-                    message = input('Input a message to encrypt: ')
-                    cipher = Affine()
-                    secret_message = cipher.encrypt(message)
-                    print('Your secret message is: {}'.format(secret_message))
-                    input('press any key to continue...')
-                if cipher_method == 'decrypt':
-                    secret_message = input('Input a message to decrypt: ')
-                    cipher = Affine()
-                    message = cipher.decrypt(message)
-                    print('Your decrypted message is: {}'.format(message))
-                    input('press any key to continue...')
+                print_underlined('Atbash Cipher')
+                cipher = Atbash()
+                users_message = input('Input a message to {}: '.format(cipher_method))
+                # use getattr() to call whichever method the user chose: encrypt or decrypt
+                translation = getattr(cipher, cipher_method)(users_message)
+                print('Translation: {}'.format(translation))
+                input('press any key to continue...')
+
             elif cipher_choice == '4':
-                # use the Atbash Cypher
-                print('Atbash Cipher')
-                print('=' * 13)
-                if cipher_method == 'encrypt':
-                    message = input('Input a message to encrypt: ')
-                    cipher = Atbash()
-                    secret_message = cipher.encrypt(message)
-                    print('Your secret message is: {}'.format(secret_message))
-                    input('press any key to continue...')
-                if cipher_method == 'decrypt':
-                    secret_message = input('Input a message to decrypt: ')
-                    cipher = Atbash()
-                    message = cipher.decrypt(message)
-                    print('Your decrypted message is: {}'.format(message))
-                    input('press any key to continue...')
+                print_underlined('Caesar Cipher')
+                cipher = Caesar()
+                users_message = input('Input a message to {}: '.format(cipher_method))
+                # use getattr() to call whichever method the user chose: encrypt or decrypt
+                translation = getattr(cipher, cipher_method)(users_message)
+                print('Translation: {}'.format(translation))
+                input('press any key to continue...')
+
+            elif cipher_choice.upper() == 'H':
+                # TODO-kml: explain what these ciphers do - maybe use the class docstrings?
+                print("You're gonna need to google these... more help coming soon")
+                input('press any key to continue...')
             elif cipher_choice.upper() == 'B':
                 break
             elif cipher_choice.upper() == 'Q':
                 quit_ui = True
                 break
-
     print('bye!')
 
 if __name__ == '__main__':

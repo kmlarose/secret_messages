@@ -6,8 +6,13 @@ import string
 # TODO-kml: do some refactoring
 # TODO-kml: add docstring descriptions
 class Alberti(Cipher):
-    def __init__(self, key='A', cipher_disk='hdveqylrijtcbpxwosmzfnakgu'):
-        self.key = key.upper()
+    """
+    Alberti Cipher models an ancient device with two rotating disks.
+    This class encrypts and decrypts text using a unique string of ciphertext (random alphabet characters).
+    The mapping of ciphertext to plain text letters randomly shifts every 1-4 characters
+    """
+    def __init__(self, cipher_disk='hdveqylrijtcbpxwosmzfnakgu'):
+        # TODO-kml confirm that the cipher_disk has 26 chars - or more appropriately, it matches len(alphabet)
         self._CIPHER_DISK = cipher_disk.lower()
         self._CHAR_REPLACEMENTS = {' ': 'ZZ',
                                    'H': 'FF',
@@ -97,15 +102,8 @@ class Alberti(Cipher):
         return message
 
     def reset_cipher(self):
-        return self.rotate_cipher(self._CIPHER_DISK, self._CIPHER_DISK.index(self.key.lower()))
+        return self.rotate_cipher(self._CIPHER_DISK, self._CIPHER_DISK.index('a'))
 
     @classmethod
     def rotate_cipher(cls, cipher, shift):
         return cipher[shift:] + cipher[:shift]
-
-    @classmethod
-    def generate_cipher_disk(cls):
-        """generates a random ordered alphabet to be used as a cipher disk"""
-        alphabet = list(string.ascii_lowercase)
-        random.shuffle(alphabet)
-        return ''.join(alphabet)
