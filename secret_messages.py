@@ -53,54 +53,42 @@ def run_console_ui():
         else:
             continue
 
-        # TODO-kml: make sure your ciphers are working properly
         # prompt 2: choose which cipher to use
         while True:
             clear()
-            print_underlined('Secret Messages!')
+            print_underlined('Secret Messages! {} MODE'.format(cipher_method.upper()))
             print('Which cipher would you like to use for {}ion?:'.format(cipher_method))
             [print(option) for option in cipher_menu]
-
-            # TODO-kml: is there a way to make this section more maintainable and DRY?
-            # yes, getattr(object, method)(args) can do what you wanna do...
             cipher_choice = input('> ')
             if cipher_choice == '1':
                 clear()
-                print_underlined('Affine Cipher')
+                print_underlined('Affine Cipher | {} Mode'.format(cipher_method.title()))
                 print("Please provide two numbers as the key for the Affine Cipher")
-                # get the key, loop through input until a valid number is provided
+                # get the keys, loop through input until a valid number is provided
                 # TODO-kml: set up an Affine @classmethod to check if the key_a is valid
-                while True:
+                affine_key_a = ''
+                while not isinstance(affine_key_a, int):
                     affine_key_a = input('Enter the first key number: ')
                     try:
                         affine_key_a = int(affine_key_a)
                     except ValueError:
                         print('please provide an integer...')
-                    else:
-                        break
-                while True:
+
+                affine_key_b = ''
+                while not isinstance(affine_key_b, int):
                     affine_key_b = input('Enter the second key number: ')
                     try:
                         affine_key_b = int(affine_key_b)
                     except ValueError:
                         print('please provide an integer...')
-                    else:
-                        break
 
                 cipher = Affine(affine_key_a, affine_key_b)
-                users_message = input('Input a message to {}: '.format(cipher_method))
-                # use getattr() to call whichever method the user chose: encrypt or decrypt
-                translation = getattr(cipher, cipher_method)(users_message)
-                print('Translation: {}'.format(translation))
-                input('press any key to continue...')
-
             elif cipher_choice == '2':
                 outer_ring = 'ABCDEFGIKLMNOPQRSTVWXZ1234'
                 inner_ring = 'hdveqylrijtcbpxwosmzfnakgu'
-
                 while True:
                     clear()
-                    print_underlined('Alberti Cipher')
+                    print_underlined('Alberti Cipher | {} Mode'.format(cipher_method.title()))
                     print('This cipher models an ancient device that aligns two disks:')
                     print('an outer disk with Plain Text, and an inner disk with Ciphertext')
                     print('Enter the inner ring character to align with outer ring A:')
@@ -120,41 +108,33 @@ def run_console_ui():
                         print('Inner Ring: {}'.format(inner_ring))
                         if input('Is this right [Y/n]?').lower() != 'n':
                             break
-
                 cipher = Alberti(cipher_disk=inner_ring)
-                users_message = input('Input a message to {}: '.format(cipher_method))
-                # use getattr() to call whichever method the user chose: encrypt or decrypt
-                translation = getattr(cipher, cipher_method)(users_message)
-                print('Translation: {}'.format(translation))
-                input('press any key to continue...')
-
             elif cipher_choice == '3':
-                print_underlined('Atbash Cipher')
+                clear()
+                print_underlined('Atbash Cipher | {} Mode'.format(cipher_method.title()))
                 cipher = Atbash()
-                users_message = input('Input a message to {}: '.format(cipher_method))
-                # use getattr() to call whichever method the user chose: encrypt or decrypt
-                translation = getattr(cipher, cipher_method)(users_message)
-                print('Translation: {}'.format(translation))
-                input('press any key to continue...')
-
             elif cipher_choice == '4':
-                print_underlined('Caesar Cipher')
+                clear()
+                print_underlined('Caesar Cipher | {} Mode'.format(cipher_method.title()))
                 cipher = Caesar()
-                users_message = input('Input a message to {}: '.format(cipher_method))
-                # use getattr() to call whichever method the user chose: encrypt or decrypt
-                translation = getattr(cipher, cipher_method)(users_message)
-                print('Translation: {}'.format(translation))
-                input('press any key to continue...')
-
             elif cipher_choice.upper() == 'H':
                 # TODO-kml: explain what these ciphers do - maybe use the class docstrings?
                 print("You're gonna need to google these... more help coming soon")
                 input('press any key to continue...')
+                continue
             elif cipher_choice.upper() == 'B':
                 break
             elif cipher_choice.upper() == 'Q':
                 quit_ui = True
                 break
+            else:
+                continue
+
+            # get the user's message and translate it using the chosen cipher & method
+            users_message = input('Input a message to {}: '.format(cipher_method))
+            translation = getattr(cipher, cipher_method)(users_message)
+            print('Translation: {}'.format(translation))
+            input('press enter to continue...')
     print('bye!')
 
 if __name__ == '__main__':
