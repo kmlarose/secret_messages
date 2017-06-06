@@ -22,11 +22,13 @@ class Caesar(Cipher):
                 output.append(char)
             else:
                 output.append(self.FORWARD[index+self.offset])
-        return ''.join(output)
+        # return ''.join(output)
+        return super().encrypt(''.join(output))
 
     def decrypt(self, text):
         """Decrypt text by shifting alphabet characters 3 places backward"""
         output = []
+        text = super().decrypt(text)
         text = text.upper()
         for char in text:
             try:

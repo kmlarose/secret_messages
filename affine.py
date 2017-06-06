@@ -33,10 +33,11 @@ class Affine(Cipher):
             coded_message[index] %= len(self.alphabet)
             new_letter = self.alphabet[coded_message[index]]
             coded_message[index] = new_letter
-        return ''.join(coded_message)
+        return super().encrypt(''.join(coded_message))
 
     def decrypt(self, text):
         """Decrypts text using this formula: a^-1 (x - b) % m"""
+        text = super().decrypt(text)
         # transform the message into numbers
         coded_message = []
         for char in text.upper():

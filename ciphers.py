@@ -11,15 +11,22 @@ class Cipher:
         self.alphabet = Cipher.ALPHABET
 
     def encrypt(self, text):
-        """Encrypts text"""
-        raise NotImplementedError()
+        """Returns encrypted text in 5 character blocks"""
+        number_of_spaces = int(len(text) / 5)
+        text_characters = list(text)
+        for number in range(number_of_spaces):
+            index = 5 * (number + 1)
+            index += number
+            text_characters.insert(index, ' ')
+        return ''.join(text_characters)
 
     def decrypt(self, text):
-        """Decrypts text"""
-        raise NotImplementedError()
-
+        """Decrypts text by removing spaces"""
+        text_characters = list(text)
+        while ' ' in text_characters:
+            text_characters.remove(' ')
+        return ''.join(text_characters)
 # TODO-kml: maybe this can be the place to implement the OTP functionality
-# TODO-kml: display encrypted output in 5 character blocks
 
     @staticmethod
     def generate_ciphertext():

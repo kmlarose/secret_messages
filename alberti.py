@@ -58,10 +58,11 @@ class Alberti(Cipher):
                 cipher = Alberti.rotate_cipher(self._CIPHER_DISK, self.key)
 
         coded_message = ''.join(coded_message)
-        return coded_message.upper()
+        return super().encrypt(coded_message.upper())
 
     def decrypt(self, text):
         """Decrypts text using the Alberti method"""
+        text = super().decrypt(text)
         cipher = self.reset_cipher()
 
         # decrypt the characters in the coded message
