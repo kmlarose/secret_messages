@@ -4,6 +4,8 @@ from atbash import Atbash
 from caesar import Caesar
 import os
 
+# TODO-kml: test your program - how does it handle spaces, special chars, empty str inputs? Can you throw Exceptions?
+
 
 def clear():
     """Clears text off the console screen"""
@@ -65,7 +67,6 @@ def run_console_ui():
                 print_underlined('Affine Cipher | {} Mode'.format(cipher_method.title()))
                 print("Please provide two numbers as the key for the Affine Cipher")
                 # get the keys, loop through input until a valid number is provided
-                # TODO-kml: set up an Affine @classmethod to check if the key_a is valid
                 affine_key_a = ''
                 while not isinstance(affine_key_a, int):
                     affine_key_a = input('Enter the first key number: ')
@@ -73,6 +74,13 @@ def run_console_ui():
                         affine_key_a = int(affine_key_a)
                     except ValueError:
                         print('please provide an integer...')
+                    else:
+                        if not Affine.is_valid_key_a(affine_key_a):
+                            print('The first key cannot share any common factors (other than 1)')
+                            print('with the length of the alphabet: {}'.format(len(Affine.ALPHABET)))
+                            print('hint: try an odd number (but, not 13)')
+                            input('enter to try again.')
+                            affine_key_a = ''
 
                 affine_key_b = ''
                 while not isinstance(affine_key_b, int):
@@ -98,17 +106,17 @@ def run_console_ui():
                     key = input('> ')
                     key = key.lower()
                     if key in inner_ring:
-                        inner_ring = Alberti.rotate_cipher(inner_ring, inner_ring.index(key))
+                        inner_ring = Alberti.rotate_cipher(inner_ring, key)
                         clear()
                         print_underlined('Alberti Cipher')
                         print('This cipher models an ancient device that aligns two disks:')
                         print('an outer disk with Plain Text, and an inner disk with Ciphertext')
-                        print()
+                        print('Enter the inner ring character to align with outer ring A:')
                         print('Outer Ring: {}'.format(outer_ring))
                         print('Inner Ring: {}'.format(inner_ring))
                         if input('Is this right [Y/n]?').lower() != 'n':
                             break
-                cipher = Alberti(cipher_disk=inner_ring)
+                cipher = Alberti(key=key, cipher_disk=inner_ring)
             elif cipher_choice == '3':
                 clear()
                 print_underlined('Atbash Cipher | {} Mode'.format(cipher_method.title()))
@@ -119,7 +127,7 @@ def run_console_ui():
                 cipher = Caesar()
             elif cipher_choice.upper() == 'H':
                 # TODO-kml: explain what these ciphers do - maybe use the class docstrings?
-                print("You're gonna need to google these... more help coming soon")
+                print("Help coming soon... in the meantime, please search the web")
                 input('press any key to continue...')
                 continue
             elif cipher_choice.upper() == 'B':

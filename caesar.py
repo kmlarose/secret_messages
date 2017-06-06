@@ -1,19 +1,18 @@
-import string
-
 from ciphers import Cipher
 
 
-# TODO-kml: do some refactoring
-# TODO-kml: add docstring descriptions
 class Caesar(Cipher):
-    FORWARD = string.ascii_uppercase * 3
+    """Caesar Cipher shifts alphabet characters 3 places forward or backward"""
+    FORWARD = Cipher.ALPHABET * 3
 
     def __init__(self, offset=3):
+        super().__init__()
         self.offset = offset
-        self.FORWARD = string.ascii_uppercase + string.ascii_uppercase[:self.offset+1]
-        self.BACKWARD = string.ascii_uppercase[:self.offset+1] + string.ascii_uppercase
+        self.FORWARD = self.alphabet + self.alphabet[:self.offset+1]
+        self.BACKWARD = self.alphabet[:self.offset+1] + self.alphabet
 
     def encrypt(self, text):
+        """Encrypt text by shifting alphabet characters 3 places forward"""
         output = []
         text = text.upper()
         for char in text:
@@ -26,6 +25,7 @@ class Caesar(Cipher):
         return ''.join(output)
 
     def decrypt(self, text):
+        """Decrypt text by shifting alphabet characters 3 places backward"""
         output = []
         text = text.upper()
         for char in text:
@@ -36,6 +36,3 @@ class Caesar(Cipher):
             else:
                 output.append(self.BACKWARD[index-self.offset])
         return ''.join(output)
-
-
-
