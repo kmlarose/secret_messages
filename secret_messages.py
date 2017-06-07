@@ -19,11 +19,9 @@ def print_underlined(text):
 
 
 def run_console_ui():
-    """
-    Runs the console user interface
+    """Runs the console user interface
     Allows the user to encrypt or decrypt a message,
-    and to select which kind of cipher to use
-    """
+    and to select which kind of cipher to use"""
     main_menu = [
         '1: Encrypt a Message',
         '2: Decrypt a Message',
