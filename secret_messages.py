@@ -5,6 +5,7 @@ from caesar import Caesar
 import os
 
 # TODO-kml: test your program - how does it handle spaces, special chars, empty str inputs? Can you throw Exceptions?
+# TODO-kml: collect the OTP Key
 
 
 def clear():
