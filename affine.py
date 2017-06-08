@@ -14,7 +14,7 @@ class Affine(Cipher):
             raise ValueError("Key A cannot share any common factors with the alphabet length (except 1)")
         self.affine_key_b = affine_key_b
 
-    def encrypt(self, text):
+    def encrypt(self, text, one_time_pad):
         """Encrypts text using this formula: f(x) = (ax + b) % m"""
         # transform the message into numbers
         coded_message = []
@@ -33,11 +33,11 @@ class Affine(Cipher):
             coded_message[index] %= len(self.alphabet)
             new_letter = self.alphabet[coded_message[index]]
             coded_message[index] = new_letter
-        return super().encrypt(''.join(coded_message))
+        return super().encrypt(''.join(coded_message), one_time_pad)
 
-    def decrypt(self, text):
+    def decrypt(self, text, one_time_pad):
         """Decrypts text using this formula: a^-1 (x - b) % m"""
-        text = super().decrypt(text)
+        text = super().decrypt(text, one_time_pad)
         # transform the message into numbers
         coded_message = []
         for char in text.upper():

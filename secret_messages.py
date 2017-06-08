@@ -4,8 +4,7 @@ from atbash import Atbash
 from caesar import Caesar
 import os
 
-# TODO-kml: test your program - how does it handle spaces, special chars, empty str inputs? Can you throw Exceptions?
-# TODO-kml: collect the OTP Key
+# TODO-kml: test input validation - how does it handle spaces, special chars, empty str inputs?
 
 
 def clear():
@@ -139,7 +138,19 @@ def run_console_ui():
 
             # get the user's message and translate it using the chosen cipher & method
             users_message = input('Input a message to {}: '.format(cipher_method))
-            translation = getattr(cipher, cipher_method)(users_message)
+            # validate input for OTP is at least as long as the message
+            long_enough = False
+            while not long_enough:
+                one_time_pad = input('please enter a one time pad: ')
+                # otp text must be at least as long as the message to be encrypted
+                if cipher_method == 'encrypt' and len(one_time_pad) >= len(users_message):
+                    long_enough = True
+                # otp text might be shorter for decrypt because of the spaces added for 5 char block output...
+                elif cipher_method == 'decrypt' and len(one_time_pad) >= len(users_message) - int(len(users_message)/6):
+                    long_enough = True
+                else:
+                    print('sorry, the one time pad must be at least as long as your message. Please try again...')
+            translation = getattr(cipher, cipher_method)(users_message, one_time_pad)
             print('Translation: {}'.format(translation))
             input('press enter to continue...')
     print('bye!')

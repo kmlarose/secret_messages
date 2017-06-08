@@ -9,10 +9,10 @@ class Atbash(Affine):
         self.affine_arg = len(Affine.ALPHABET) - 1
         super().__init__(self.affine_arg, self.affine_arg)
 
-    def encrypt(self, text):
+    def encrypt(self, text, one_time_pad):
         """Encrypts text using the Atbash cipher method"""
-        return super().encrypt(text)
+        return super().encrypt(text, one_time_pad)
 
-    def decrypt(self, text):
+    def decrypt(self, text, one_time_pad):
         """Decrypts text using the Atbash cipher method"""
-        return super().decrypt(text)
+        return super().decrypt(text, one_time_pad)

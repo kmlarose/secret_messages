@@ -11,7 +11,7 @@ class Caesar(Cipher):
         self.FORWARD = self.alphabet + self.alphabet[:self.offset+1]
         self.BACKWARD = self.alphabet[:self.offset+1] + self.alphabet
 
-    def encrypt(self, text):
+    def encrypt(self, text, one_time_pad):
         """Encrypt text by shifting alphabet characters 3 places forward"""
         output = []
         text = text.upper()
@@ -23,12 +23,12 @@ class Caesar(Cipher):
             else:
                 output.append(self.FORWARD[index+self.offset])
         # return ''.join(output)
-        return super().encrypt(''.join(output))
+        return super().encrypt(''.join(output), one_time_pad)
 
-    def decrypt(self, text):
+    def decrypt(self, text, one_time_pad):
         """Decrypt text by shifting alphabet characters 3 places backward"""
         output = []
-        text = super().decrypt(text)
+        text = super().decrypt(text, one_time_pad)
         text = text.upper()
         for char in text:
             try:

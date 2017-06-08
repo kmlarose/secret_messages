@@ -6,17 +6,17 @@ class Cipher:
     """Parent class for all the different kinds of ciphers"""
     ALPHABET = string.ascii_uppercase
 
-    def __init__(self, otp_key='adrlagiurnlsidurabnlseiuban'):
+    def __init__(self):
         """Adds a standard English alphabet to each class instance"""
         self.alphabet = Cipher.ALPHABET
-        self.otp_key = otp_key
+        self.otp_chars = string.printable[:95]
 
-    def encrypt(self, text):
+    def encrypt(self, text, one_time_pad):
         """Further encrypts the message with a unique One Time Pad and returns text in 5 character blocks."""
         code_message = []
         [code_message.append(self.alphabet.index(char.upper())) for char in text]
         code_otp = []
-        [code_otp.append(self.alphabet.index(char.upper())) for char in self.otp_key]
+        [code_otp.append(self.otp_chars.index(char)) for char in one_time_pad]
         merged_code = [(code_message[index] + code_otp[index]) % 26 for index in range(len(code_message))]
         final_code = []
         [final_code.append(self.alphabet[number]) for number in merged_code]
@@ -31,7 +31,7 @@ class Cipher:
             text_characters.insert(index, ' ')
         return ''.join(text_characters)
 
-    def decrypt(self, text):
+    def decrypt(self, text, one_time_pad):
         """Remove spaces and decrypt the One Time Pad.
         The result will also need to be decrypted by one of the cipher classes."""
         text_characters = list(text)
@@ -43,7 +43,7 @@ class Cipher:
         code_message = []
         [code_message.append(self.alphabet.index(char.upper())) for char in text]
         code_otp = []
-        [code_otp.append(self.alphabet.index(char.upper())) for char in self.otp_key]
+        [code_otp.append(self.otp_chars.index(char)) for char in one_time_pad]
         decrypted_code = [(code_message[index] - code_otp[index]) % 26 for index in range(len(code_message))]
         ciphertext = []
         [ciphertext.append(self.alphabet[number]) for number in decrypted_code]

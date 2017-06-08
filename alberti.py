@@ -20,7 +20,7 @@ class Alberti(Cipher):
                                    'Y': 'II',
                                    'J': 'XX'}
 
-    def encrypt(self, text):
+    def encrypt(self, text, one_time_pad):
         """Encrypts text by mapping letters to the cipher text.
         Randomly shifts key to ciphertext every 1-4 characters."""
         # make sure there aren't any numbers in the text
@@ -60,7 +60,7 @@ class Alberti(Cipher):
         coded_message = ''.join(coded_message)
         return super().encrypt(coded_message.upper())
 
-    def decrypt(self, text):
+    def decrypt(self, text, one_time_pad):
         """Decrypts text using the Alberti method"""
         text = super().decrypt(text)
         cipher = self.reset_cipher()
