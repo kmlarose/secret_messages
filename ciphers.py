@@ -32,7 +32,14 @@ class Cipher:
         return ''.join(text_characters)
 
     def decrypt(self, text):
-        """Decrypts the One Time Pad. The result will also need to be decrypted by one of the cipher classes."""
+        """Remove spaces and decrypt the One Time Pad.
+        The result will also need to be decrypted by one of the cipher classes."""
+        text_characters = list(text)
+        while ' ' in text_characters:
+            text_characters.remove(' ')
+        text = ''.join(text_characters)
+
+        # decrypt the One Time Pad
         code_message = []
         [code_message.append(self.alphabet.index(char.upper())) for char in text]
         code_otp = []
@@ -40,13 +47,7 @@ class Cipher:
         decrypted_code = [(code_message[index] - code_otp[index]) % 26 for index in range(len(code_message))]
         ciphertext = []
         [ciphertext.append(self.alphabet[number]) for number in decrypted_code]
-        text = ''.join(ciphertext)
-
-        """Decrypts text by removing spaces"""
-        text_characters = list(text)
-        while ' ' in text_characters:
-            text_characters.remove(' ')
-        return ''.join(text_characters)
+        return ''.join(ciphertext)
 
     @staticmethod
     def generate_ciphertext():
