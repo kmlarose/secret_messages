@@ -32,7 +32,7 @@ def run_console_ui():
         '2: Alberti Cipher',
         '3: Atbash Cipher',
         '4: Caesar Cipher',
-        'H: Help',
+        # 'H: Help',
         'B: Back to Main Menu',
         'Q: Quit']
 
@@ -124,11 +124,11 @@ def run_console_ui():
                 clear()
                 print_underlined('Caesar Cipher | {} Mode'.format(cipher_method.title()))
                 cipher = Caesar()
-            elif cipher_choice.upper() == 'H':
-                # TODO-kml: explain what these ciphers do - maybe use the class docstrings?
-                print("Help coming soon... in the meantime, please search the web")
-                input('press any key to continue...')
-                continue
+            # elif cipher_choice.upper() == 'H':
+            #     # TODO-kml: explain what these ciphers do - maybe use the class docstrings?
+            #     print("Help coming soon... in the meantime, please search the web")
+            #     input('press any key to continue...')
+            #     continue
             elif cipher_choice.upper() == 'B':
                 break
             elif cipher_choice.upper() == 'Q':
