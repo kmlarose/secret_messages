@@ -4,8 +4,6 @@ from atbash import Atbash
 from caesar import Caesar
 import os
 
-# TODO-kml: test input validation - how does it handle spaces, special chars, empty str inputs?
-
 
 def clear():
     """Clears text off the console screen"""
@@ -75,9 +73,9 @@ def run_console_ui():
                     else:
                         if not Affine.is_valid_key_a(affine_key_a):
                             print('The first key cannot share any common factors (other than 1)')
-                            print('with the length of the alphabet: {}'.format(len(Affine.ALPHABET)))
-                            print('hint: try an odd number (but, not 13)')
-                            input('enter to try again.')
+                            print('...with the length of the alphabet: {}'.format(len(Affine.ALPHABET)))
+                            print('...hint: try an odd number (but, not 13)')
+                            input('press enter to try again...')
                             affine_key_a = ''
 
                 affine_key_b = ''

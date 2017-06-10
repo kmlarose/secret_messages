@@ -13,8 +13,14 @@ class Caesar(Cipher):
 
     def encrypt(self, text, one_time_pad):
         """Encrypt text by shifting alphabet characters 3 places forward"""
+        # scrub spaces, numbers, and special chars from the input string
+        text = list(text.upper())
+        while any(char not in self.alphabet for char in text):
+            for char in text:
+                if char not in self.alphabet:
+                    text.remove(char)
+        text = ''.join(text)
         output = []
-        text = text.upper()
         for char in text:
             try:
                 index = self.FORWARD.index(char)
@@ -22,7 +28,6 @@ class Caesar(Cipher):
                 output.append(char)
             else:
                 output.append(self.FORWARD[index+self.offset])
-        # return ''.join(output)
         return super().encrypt(''.join(output), one_time_pad)
 
     def decrypt(self, text, one_time_pad):

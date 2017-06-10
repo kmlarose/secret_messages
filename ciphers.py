@@ -34,10 +34,13 @@ class Cipher:
     def decrypt(self, text, one_time_pad):
         """Remove spaces and decrypt the One Time Pad.
         The result will also need to be decrypted by one of the cipher classes."""
-        text_characters = list(text)
-        while ' ' in text_characters:
-            text_characters.remove(' ')
-        text = ''.join(text_characters)
+        # scrub spaces, numbers, and special chars from the input string
+        text = list(text.upper())
+        while any(char not in self.alphabet for char in text):
+            for char in text:
+                if char not in self.alphabet:
+                    text.remove(char)
+        text = ''.join(text)
 
         # decrypt the One Time Pad
         code_message = []

@@ -24,9 +24,18 @@ class Alberti(Cipher):
         """Encrypts text by mapping letters to the cipher text.
         Randomly shifts key to ciphertext every 1-4 characters."""
         # make sure there aren't any numbers in the text
-        if any(char.isdigit() for char in text):
-            raise ValueError("Please no numbers - write them out or use Roman numerals")
-        coded_message = text.upper()
+        # import pdb; pdb.set_trace()
+
+        # scrub spaces, numbers, and special chars from the input string
+        text = list(text.upper())
+        while any(char not in self.alphabet for char in text):
+            for char in text:
+                if char not in self.alphabet:
+                    text.remove(char)
+        # if any(char.isdigit() for char in text):
+        #     raise ValueError("Please no numbers - write them out or use Roman numerals")
+
+        coded_message = ''.join(text)
         cipher = self.reset_cipher()
 
         # replace any characters in the text which do not appear on the plain text disk
@@ -58,11 +67,11 @@ class Alberti(Cipher):
                 cipher = Alberti.rotate_cipher(self._CIPHER_DISK, self.key)
 
         coded_message = ''.join(coded_message)
-        return super().encrypt(coded_message.upper())
+        return super().encrypt(coded_message.upper(), one_time_pad)
 
     def decrypt(self, text, one_time_pad):
         """Decrypts text using the Alberti method"""
-        text = super().decrypt(text)
+        text = super().decrypt(text, one_time_pad)
         cipher = self.reset_cipher()
 
         # decrypt the characters in the coded message
